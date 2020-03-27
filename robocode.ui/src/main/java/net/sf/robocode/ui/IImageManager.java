@@ -20,6 +20,9 @@ public interface IImageManager {
 	void initialize();
 
 	Image getGroundTileImage(int index);
+	
+	//add by leo
+	Image getGroundTileImage(int x, int y);
 
 	RenderImage getExplosionRenderImage(int which, int frame);
 

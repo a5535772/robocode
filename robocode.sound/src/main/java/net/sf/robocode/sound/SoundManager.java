@@ -110,8 +110,10 @@ public class SoundManager implements ISoundManager {
 
 			// Music
 			sounds.addSound("theme", properties.getFileThemeMusic(), 1);
-			sounds.addSound("background", properties.getFileBackgroundMusic(), 1);
-			sounds.addSound("endOfBattle", properties.getFileEndOfBattleMusic(), 1);
+//			sounds.addSound("background", properties.getFileBackgroundMusic(), 1);
+			sounds.addSound("background", "/net/sf/robocode/sound/sounds/start.wav", 1);
+//			sounds.addSound("endOfBattle", properties.getFileEndOfBattleMusic(), 1);
+			sounds.addSound("endOfBattle", "/net/sf/robocode/sound/sounds/end.wav", 1);
 		}
 		return sounds;
 	}
