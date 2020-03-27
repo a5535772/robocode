@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2001-2017 Mathew A. Nelson and Robocode contributors
+ * Copyright (c) 2001-2016 Mathew A. Nelson and Robocode contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,29 @@
 package net.sf.robocode.ui.dialog;
 
 
+import static net.sf.robocode.ui.util.ShortcutUtil.MENU_SHORTCUT_KEY_MASK;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+
 import net.sf.robocode.battle.IBattleManager;
+import net.sf.robocode.custom.api.BattleFieldApi;
+import net.sf.robocode.custom.impl.MutiBattleFieldImpl;
+import net.sf.robocode.custom.impl.StaticBattleFieldImpl;
 import net.sf.robocode.host.ICpuManager;
 import net.sf.robocode.recording.BattleRecordFormat;
 import net.sf.robocode.recording.IRecordManager;
@@ -17,15 +39,6 @@ import net.sf.robocode.settings.ISettingsListener;
 import net.sf.robocode.settings.ISettingsManager;
 import net.sf.robocode.ui.IWindowManagerExt;
 import net.sf.robocode.ui.editor.IRobocodeEditor;
-import static net.sf.robocode.ui.util.ShortcutUtil.MENU_SHORTCUT_KEY_MASK;
-
-import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 
 
 /**
@@ -81,6 +94,34 @@ public class MenuBar extends JMenuBar {
 	private JMenuItem helpRoboWikiMenuItem;
 	private JMenuItem helpGoogleGroupRobocodeMenuItem;
 	private JMenuItem helpRobocodeRepositoryMenuItem;
+	
+	//自定义菜单
+	private JMenu customMenu;
+	private JMenuItem customPullBattleMenuItem;
+	
+	//使用一个基本的baseImplu
+	private BattleFieldApi battleFieldApi=new StaticBattleFieldImpl();
+
+	private JMenu getCustomMenu() {
+		if (customMenu == null) {
+			customMenu = new JMenu();
+			customMenu.setText("Custom");
+			customMenu.add(getCustomPullBattleMenuItem());
+			customMenu.setMnemonic('Z');
+			customMenu.addMenuListener(eventHandler);
+		}
+		return customMenu;
+	}
+
+	private JMenuItem getCustomPullBattleMenuItem() {
+		if (customPullBattleMenuItem == null) {
+			customPullBattleMenuItem =new JMenuItem();
+			customPullBattleMenuItem.setText("Pull Battle");
+			//refreshMenuItem.setDisplayedMnemonicIndex(0);
+			customPullBattleMenuItem.addActionListener(eventHandler);
+		}
+		return customPullBattleMenuItem;
+	}
 
 	private class EventHandler implements ActionListener, MenuListener {
 		public void actionPerformed(ActionEvent e) {
@@ -158,6 +199,8 @@ public class MenuBar extends JMenuBar {
 				helpVersionsTxtActionPerformed();
 			} else if (source == mb.getHelpAboutMenuItem()) {
 				helpAboutActionPerformed();
+			}else if (source == mb.getCustomPullBattleMenuItem()) {
+				battleFieldApi.pullNextRound();
 			}
 		}
 
@@ -201,6 +244,8 @@ public class MenuBar extends JMenuBar {
 		add(getRobotMenu());
 		add(getOptionsMenu());
 		add(getHelpMenu());
+		//Leo : Yeah I add a menu here
+		add(getCustomMenu());
 	}
 
 	public void setup(RobocodeFrame robocodeFrame) {

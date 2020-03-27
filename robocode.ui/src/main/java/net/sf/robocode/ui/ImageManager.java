@@ -72,6 +72,10 @@ public class ImageManager implements IImageManager {
 		}
 		return groundImages[index];
 	}
+	
+    public Image getGroundTileImage(int x, int y) {
+        return getImage("/net/sf/robocode/ui/images/ground/blue_metal_1000_1000/blue_metal_" + y + "_" + x + ".png");
+    }	
 
 	public RenderImage getExplosionRenderImage(int which, int frame) {
 		if (explosionRenderImages == null) {

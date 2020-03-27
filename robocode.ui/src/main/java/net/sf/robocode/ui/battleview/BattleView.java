@@ -266,6 +266,23 @@ public class BattleView extends Canvas {
 
 		groundGfx.setTransform(AffineTransform.getScaleInstance(scale, scale));
 
+//		sourceCodeExtracted(NUM_HORZ_TILES, NUM_VERT_TILES, groundGfx);
+		
+        customExtracted(NUM_HORZ_TILES, NUM_VERT_TILES, groundGfx);
+	}
+
+	private void customExtracted(final int NUM_HORZ_TILES, final int NUM_VERT_TILES, Graphics2D groundGfx) {
+		for (int x = 0; x < NUM_HORZ_TILES; x++) {
+            for (int y = 0; y < NUM_VERT_TILES; y++) {
+                Image img = imageManager.getGroundTileImage(x + 1, y + 1);
+                if (img != null) {
+                    groundGfx.drawImage(img, x * groundTileWidth, y * groundTileHeight, null);
+                }
+            }
+        }
+	}
+
+	private void sourceCodeExtracted(final int NUM_HORZ_TILES, final int NUM_VERT_TILES, Graphics2D groundGfx) {
 		for (int y = NUM_VERT_TILES - 1; y >= 0; y--) {
 			for (int x = NUM_HORZ_TILES - 1; x >= 0; x--) {
 				Image img = imageManager.getGroundTileImage(groundTiles[y][x]);
