@@ -7,7 +7,6 @@
  */
 package net.sf.robocode.ui;
 
-
 import net.sf.robocode.settings.ISettingsManager;
 import net.sf.robocode.ui.gfx.ImageUtil;
 import net.sf.robocode.ui.gfx.RenderImage;
@@ -15,7 +14,6 @@ import net.sf.robocode.ui.gfx.RenderImage;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-
 
 /**
  * @author Mathew A. Nelson (original)
@@ -46,7 +44,8 @@ public class ImageManager implements IImageManager {
 	}
 
 	public void initialize() {
-		// Note that initialize could be called in order to reset all images (image buffering)
+		// Note that initialize could be called in order to reset all images (image
+		// buffering)
 
 		// Reset image cache
 		groundImages = new Image[5];
@@ -72,10 +71,25 @@ public class ImageManager implements IImageManager {
 		}
 		return groundImages[index];
 	}
+
+	public Image getGroundTileImage(int x, int y) {
+		//图片是16*16的，所以图片边界值最大为16，当超过16的时候，就重复
+		int maxNumber = 16;
+		return getImage("/net/sf/robocode/ui/images/ground/blue_metal_1000_1000/blue_metal_" + getFixedNumber(y, maxNumber) + "_" + getFixedNumber(x, maxNumber) + ".png");
+	}
+
 	
-    public Image getGroundTileImage(int x, int y) {
-        return getImage("/net/sf/robocode/ui/images/ground/blue_metal_1000_1000/blue_metal_" + y + "_" + x + ".png");
-    }	
+	private int getFixedNumber(int number,int maxNumber) {
+		if (number <= maxNumber) {
+			return number;
+		}
+		number = number - maxNumber;
+		if (number <= maxNumber) {
+			return number;
+		} else {
+			return getFixedNumber(number,maxNumber);
+		}
+	}
 
 	public RenderImage getExplosionRenderImage(int which, int frame) {
 		if (explosionRenderImages == null) {
@@ -90,7 +104,8 @@ public class ImageManager implements IImageManager {
 				List<RenderImage> frames = new ArrayList<RenderImage>();
 
 				for (numFrame = 1;; numFrame++) {
-					filename = "/net/sf/robocode/ui/images/explosion/explosion" + numExplosion + '-' + numFrame + ".png";
+					filename = "/net/sf/robocode/ui/images/explosion/explosion" + numExplosion + '-' + numFrame
+							+ ".png";
 
 					if (ImageManager.class.getResource(filename) == null) {
 						if (numFrame == 1) {
@@ -132,8 +147,7 @@ public class ImageManager implements IImageManager {
 	}
 
 	/**
-	 * Gets the body image
-	 * Loads from disk if necessary.
+	 * Gets the body image Loads from disk if necessary.
 	 *
 	 * @return the body image
 	 */
@@ -145,8 +159,7 @@ public class ImageManager implements IImageManager {
 	}
 
 	/**
-	 * Gets the gun image
-	 * Loads from disk if necessary.
+	 * Gets the gun image Loads from disk if necessary.
 	 *
 	 * @return the gun image
 	 */
@@ -158,8 +171,7 @@ public class ImageManager implements IImageManager {
 	}
 
 	/**
-	 * Gets the radar image
-	 * Loads from disk if necessary.
+	 * Gets the radar image Loads from disk if necessary.
 	 *
 	 * @return the radar image
 	 */
@@ -208,17 +220,17 @@ public class ImageManager implements IImageManager {
 	@SuppressWarnings("serial")
 	private static class RenderCache<K, V> extends LinkedHashMap<K, V> {
 
-		/* Note about initial capacity:
-		 * To avoid rehashing (inefficient though probably unavoidable), initial
-		 * capacity must be at least 1 greater than the maximum capacity.
-		 * However, initial capacities are set to the smallest power of 2 greater
-		 * than or equal to the passed argument, resulting in 512 with this code.
-		 * I was not aware of this before, but notice: the current implementation
-		 * behaves similarly.  The simple solution would be to set maximum capacity
-		 * to 255, but the problem with doing so is that in a battle of 256 robots
-		 * of different colors, the net result would end up being real-time
-		 * rendering due to the nature of access ordering.  However, 256 robot
-		 * battles are rarely fought.
+		/*
+		 * Note about initial capacity: To avoid rehashing (inefficient though probably
+		 * unavoidable), initial capacity must be at least 1 greater than the maximum
+		 * capacity. However, initial capacities are set to the smallest power of 2
+		 * greater than or equal to the passed argument, resulting in 512 with this
+		 * code. I was not aware of this before, but notice: the current implementation
+		 * behaves similarly. The simple solution would be to set maximum capacity to
+		 * 255, but the problem with doing so is that in a battle of 256 robots of
+		 * different colors, the net result would end up being real-time rendering due
+		 * to the nature of access ordering. However, 256 robot battles are rarely
+		 * fought.
 		 */
 		private static final int INITIAL_CAPACITY = MAX_NUM_COLORS + 1;
 
@@ -226,8 +238,9 @@ public class ImageManager implements IImageManager {
 
 		public RenderCache() {
 
-			/* The "true" parameter needed for access-order:
-			 * when cache fills, the least recently accessed entry is removed
+			/*
+			 * The "true" parameter needed for access-order: when cache fills, the least
+			 * recently accessed entry is removed
 			 */
 			super(INITIAL_CAPACITY, LOAD_FACTOR, true);
 		}
